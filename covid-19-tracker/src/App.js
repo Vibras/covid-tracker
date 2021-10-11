@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import InfoBox from "./InfoBox";
+import Map from "./Map";
+import { MenuItem, FormControl, Select, Card, CardContent } from '@mui/material';
 import "./App.css";
-import { MenuItem, FormControl, Select } from '@mui/material';
-
 
 function App() {
   // State = how to write a variable in React
@@ -36,35 +37,40 @@ function App() {
 
   return (
     <div className="app"> {/* BEM Naming Convention */}
-      <div className="app__header">
-        <h1>COVID-19 Tracker</h1>
-        <FormControl className="app__dropdown">
-          <Select variant="outlined" value={country} onChange={onCountryChange}>
-              {/* Loop through all countries and show a drop down of the options */}
-              <MenuItem value="worldwide">Worldwide</MenuItem>
-              {
-                countries.map((country) => (
-                  <MenuItem value={country.value}>{country.name}</MenuItem>
-                ))
-              }
-            
+      <div className="app_left">
+        <div className="app__header">
+          {/* Header - Title & Select input dropdown field */}
+          <h1>COVID-19 Tracker</h1>
+          <FormControl className="app__dropdown">
+            <Select variant="outlined" value={country} onChange={onCountryChange}>
+                {/* Loop through all countries and show a drop down of the options */}
+                <MenuItem value="worldwide">Worldwide</MenuItem>
+                {
+                  countries.map((country) => (
+                    <MenuItem value={country.value}>{country.name}</MenuItem>
+                  ))
+                }
 
-          </Select>
-        </FormControl>
+            </Select>
+          </FormControl>
+        </div>
+        <div className="app__stats">
+          {/* Info Boxes */}
+          <InfoBox title="Coronavirus Cases" cases={123} total={2000} />
+          <InfoBox title="Recovered" cases={1234} total={3000} />
+          <InfoBox title="Deaths" cases={12345} total={4000} />
+        </div>
+        <Map />
       </div>
-      
-      
-      {/* Header */}
-      {/* Title & Select input dropdown field */}
+      <Card className="app__right">
+        <CardContent>
+          <h3>Live Cases by Country</h3>
+          {/* Table */}
+          <h3>Worldwide New Cases</h3>
+          {/* Graph*/}
 
-      {/* Info Boxes */}
-      {/* Info Boxes */}
-      {/* Info Boxes */}
-
-      {/* Table */}
-      {/* Graph*/}
-
-      {/* Map */}
+        </CardContent>
+      </Card>
     </div>
   );
 }
