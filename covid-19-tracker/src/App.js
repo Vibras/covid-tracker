@@ -3,12 +3,15 @@ import InfoBox from "./InfoBox";
 import Map from "./Map";
 import { MenuItem, FormControl, Select, Card, CardContent } from '@mui/material';
 import "./App.css";
+import Table from "./Table";
+import sortData from "./util.js";
 
 function App() {
   // State = how to write a variable in React
   const [countries, setCountries ] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+  const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     fetch("https://disease.sh/v3/covid-19/all")
@@ -32,7 +35,10 @@ function App() {
               value: country.countryInfo.iso2,
             }));
             
+            const sortedData = sortData(data);
             setCountries(countries);
+            setTableData(sortedData);
+            
           });
       };
   
@@ -89,6 +95,7 @@ function App() {
         <CardContent>
           <h3>Live Cases by Country</h3>
           {/* Table */}
+          <Table countries={tableData} />
           <h3>Worldwide New Cases</h3>
           {/* Graph*/}
 
