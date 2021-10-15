@@ -5,8 +5,10 @@ import { MenuItem, FormControl, Select, Card, CardContent } from '@mui/material'
 import "./App.css";
 import Table from "./Table";
 import sortData from "./util.js";
+import LineGraph from "./LineGraph.js";
 
-function App() {
+
+function App(){
   // State = how to write a variable in React
   const [countries, setCountries ] = useState([]);
   const [country, setCountry] = useState("worldwide");
@@ -98,7 +100,7 @@ function App() {
           <Table countries={tableData} />
           <h3>Worldwide New Cases</h3>
           {/* Graph*/}
-
+          <LineGraph />
         </CardContent>
       </Card>
     </div>
