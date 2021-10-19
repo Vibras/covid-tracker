@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from "react";
-import InfoBox from "./InfoBox";
-import Map from "./Map";
-import { MenuItem, FormControl, Select, Card, CardContent } from '@mui/material';
 import "./App.css";
+import {
+  MenuItem,
+  FormControl,
+  Select,
+  Card,
+  CardContent,
+} from '@mui/material';
+import InfoBox from "./InfoBox";
+import LineGraph from "./LineGraph";
 import Table from "./Table";
-import sortData from "./util.js";
-import LineGraph from "./LineGraph.js";
+import { sortData } from "./util";
+import numeral from "numeral";
+// import Map from "./Map";
+// import "leaflet/dist/leaflet.css";
 
 
 function App(){
   // State = how to write a variable in React
-  const [countries, setCountries ] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+  const [countries, setCountries] = useState([]);
+ //  const [mapCountries, setMapCountries] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [casesType, setCasesType] = useState("cases");
+  // const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 });
+  // const [mapZoom, setMapZoom] = useState(3);
 
   useEffect(() => {
     fetch("https://disease.sh/v3/covid-19/all")
@@ -39,6 +51,7 @@ function App(){
             
             const sortedData = sortData(data);
             setCountries(countries);
+            // setMapCountries(data);
             setTableData(sortedData);
             
           });
@@ -46,7 +59,9 @@ function App(){
   
       getCountriesData();
     }, []);
-
+  
+  console.log(casesType);
+  
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     setCountry(countryCode);
@@ -61,10 +76,10 @@ function App(){
         setCountry(countryCode);
         // All of the data from the country response
         setCountryInfo(data);
+        //setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+       // setMapZoom(4);
       });
   }
-
-  console.log('Country Info>', countryInfo);
 
   return (
     <div className="app"> {/* BEM Naming Convention */}
@@ -86,21 +101,40 @@ function App(){
           </FormControl>
         </div>
         <div className="app__stats">
-          {/* Info Boxes */}
-          <InfoBox title="Coronavirus Cases" cases={countryInfo.todayCases} total={countryInfo.cases} />
-          <InfoBox title="Recovered" cases={countryInfo.todayRecovered} total={countryInfo.recovered} />
-          <InfoBox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
+        <InfoBox
+            onClick={(e) => setCasesType("cases")}
+            title="Coronavirus Cases"
+            isRed
+            active={casesType === "cases"}
+            cases={(countryInfo.todayCases)}
+            total={numeral(countryInfo.cases).format("0.0a")}
+          />
+          <InfoBox
+            onClick={(e) => setCasesType("recovered")}
+            title="Recovered"
+            active={casesType === "recovered"}
+            cases={(countryInfo.todayRecovered)}
+            total={numeral(countryInfo.recovered).format("0.0a")}
+          />
+          <InfoBox
+            onClick={(e) => setCasesType("deaths")}
+            title="Deaths"
+            isRed
+            active={casesType === "deaths"}
+            cases={(countryInfo.todayDeaths)}
+            total={numeral(countryInfo.deaths).format("0.0a")}
+          />
         </div>
-        <Map />
+        <h1>Map</h1>
       </div>
       <Card className="app__right">
         <CardContent>
-          <h3>Live Cases by Country</h3>
-          {/* Table */}
-          <Table countries={tableData} />
-          <h3>Worldwide New Cases</h3>
-          {/* Graph*/}
-          <LineGraph />
+          <div className="app__information">
+              <h3>Live Cases by Country</h3>
+              <Table countries={tableData} />
+              <h3>Worldwide new {casesType}</h3>
+              <LineGraph casesType={casesType} />
+            </div>
         </CardContent>
       </Card>
     </div>

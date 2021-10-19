@@ -1,16 +1,24 @@
 // import React from "react";
+import numeral from "numeral";
+// import { Circle, Popup } from "react-leaflet";
+
 
 
 export const sortData = (data) => {
-  const sortData = [...data];
-  sortData.sort((a, b) => {
+  let sortedData = [...data];
+  sortedData.sort((a, b) => {
     if (a.cases > b.cases) {
       return -1;
     } else {
       return 1;
     }
   });
-  return sortData;
+  return sortedData;
 };
+
+export const prettyPrintStat = (stat) =>
+  stat ? `+${numeral(stat).format("0.0a")}` : "+0";
+
+
 
 export default sortData;
